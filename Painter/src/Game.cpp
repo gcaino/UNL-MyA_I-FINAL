@@ -97,8 +97,11 @@ void Game::processEvents()
 		{
 			pause();
 		}
+		else if (event.type == sf::Event::MouseButtonPressed)
+		{
+			_cannon->processEvents();
+		}
 	}
-	_cannon->processEvents();
 }
 
 void Game::pause()

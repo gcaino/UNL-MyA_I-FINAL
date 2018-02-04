@@ -18,8 +18,19 @@ private:
 	void shootBall();
 	void changeColoredBall();
 
-	sf::Texture	_texture;
-	sf::Sprite	_sprite;
+	static const int MAX_COLORED_BALL = 3;
+	enum COLORS { RED, BLUE, GREEN };
+	int			_currentColor;
+
+	sf::Texture	_cannonTexture;
+	sf::Sprite	_cannonSprite;
+
+	sf::Texture	_cannonBlueBallTexture;
+	sf::Texture	_cannonRedBallTexture;
+	sf::Texture	_cannonGreenBallTexture;
+
+	sf::Texture	_cannonColoredBallTextures[MAX_COLORED_BALL];
+	sf::Sprite	_cannonColoredBallSprite;
 
 };
 
