@@ -3,6 +3,7 @@
 
 #include <SFML\Graphics.hpp>
 
+class Cannon;
 class PaintBucketsManager;
 
 class Game
@@ -17,6 +18,7 @@ private:
 	void update(sf::Time deltaTime);
 	void draw();
 
+	void addSpriteToMousePointer();
 	void loadTexturesAndSetSprites();
 	void loadFontsAndSetTexts();
 	void drawLives() const;
@@ -29,11 +31,14 @@ private:
 	static const int MAX_LIVES = 5;
 
 	sf::RenderWindow*	 _window;
+	Cannon*				 _cannon;
 	PaintBucketsManager* _paintBucketsManager;
 	int					 _lives;
 	int					 _score;
 	bool				 _paused;
 
+	sf::Texture			_crosshairTexture;
+	sf::Sprite			_crosshairSprite;
 	sf::Texture			_backgroundTexture;
 	sf::Sprite			_backgroundSprite;
 	sf::Texture			_liveTexture;
