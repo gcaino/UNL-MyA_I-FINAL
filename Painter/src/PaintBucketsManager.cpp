@@ -44,7 +44,11 @@ void PaintBucketsManager::update(sf::Time deltaTime)
 	spawnPaintBucket();
 
 	for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
+	{
+		_paintBuckets[i]->addAcceleration(sf::Vector2f(0.f, 9.8f));
 		_paintBuckets[i]->update(deltaTime);
+	}
+		
 }
 
 void PaintBucketsManager::spawnPaintBucket()
