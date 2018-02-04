@@ -1,8 +1,10 @@
 #include <iostream>
 #include "Game.h"
+#include "PaintBucketsManager.h"
 
 Game::Game()
 	: _window()
+	, _paintBucketsManager()
 	, _lives(MAX_LIVES)
 	, _score(0)
 	, _paused(false)
@@ -11,10 +13,14 @@ Game::Game()
 	_window->setFramerateLimit(FPS);
 
 	loadTexturesAndSetSprites();
+	loadFontsAndSetTexts();
+
+	_paintBucketsManager = new PaintBucketsManager();
 }
 
 Game::~Game()
 {
+	delete _paintBucketsManager;
 	delete _window;
 }
 
@@ -37,6 +43,16 @@ void Game::loadTexturesAndSetSprites()
 	
 	_gameOverTexture.loadFromFile("assets/textures/spr_gameover_click.png");
 	_gameOverSprite.setTexture(_gameOverTexture);
+}
+
+void Game::loadFontsAndSetTexts()
+{
+	_font.loadFromFile("assets/fonts/PaytoneOne-Regular.ttf");
+	_scoreText.setFont(_font);
+	_scoreText.setFillColor(sf::Color::White);
+	_scoreText.setPosition(_scoreBarSprite.getPosition().x + 10.f, 
+		_scoreBarSprite.getPosition().y);
+	setScore();
 }
 
 void Game::loop()
@@ -80,12 +96,13 @@ void Game::pause()
 
 void Game::update(sf::Time deltaTime)
 {
-	_timer += deltaTime;
-	if (_timer >= sf::seconds(5.f))
-	{
-		--_lives;
-		_timer = sf::Time::Zero;
-	}
+	_paintBucketsManager->update(deltaTime);
+	_paintBucketsManager->checkIfPaintBucketLeftWindow(*_window);
+}
+
+void Game::setScore()
+{
+	_scoreText.setString("Score: " + std::to_string(_score));
 }
 
 void Game::draw()
@@ -93,7 +110,9 @@ void Game::draw()
 	_window->clear();
 
 	_window->draw(_backgroundSprite);
+	_paintBucketsManager->draw(*_window);
 	_window->draw(_scoreBarSprite);
+	_window->draw(_scoreText);
 	drawLives();
 
 	_window->display();

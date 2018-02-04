@@ -3,6 +3,8 @@
 
 #include <SFML\Graphics.hpp>
 
+class PaintBucketsManager;
+
 class Game
 {
 public:
@@ -16,18 +18,21 @@ private:
 	void draw();
 
 	void loadTexturesAndSetSprites();
+	void loadFontsAndSetTexts();
 	void drawLives() const;
 	void pause();
+	void setScore();
 
 	const int WINDOW_WIDTH = 800;
 	const int WINDOW_HEIGHT = 480;
 	const int FPS = 60;
 	static const int MAX_LIVES = 5;
 
-	sf::RenderWindow*	_window;
-	int					_lives;
-	int					_score;
-	bool				_paused;
+	sf::RenderWindow*	 _window;
+	PaintBucketsManager* _paintBucketsManager;
+	int					 _lives;
+	int					 _score;
+	bool				 _paused;
 
 	sf::Texture			_backgroundTexture;
 	sf::Sprite			_backgroundSprite;
@@ -37,6 +42,9 @@ private:
 	sf::Sprite			_scoreBarSprite;
 	sf::Texture			_gameOverTexture;
 	sf::Sprite			_gameOverSprite;
+	
+	sf::Font			_font;
+	sf::Text			_scoreText;
 };
 
 #endif // !GAME_H

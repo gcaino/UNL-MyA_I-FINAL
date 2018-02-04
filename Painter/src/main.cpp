@@ -4,6 +4,8 @@
 
 int main()
 {
+	std::srand(static_cast<unsigned int>(time(NULL)));
+
 	try
 	{
 		Game game;

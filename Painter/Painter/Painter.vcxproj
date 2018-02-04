@@ -21,9 +21,13 @@
   <ItemGroup>
     <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\PaintBucket.cpp" />
+    <ClCompile Include="..\src\PaintBucketsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Game.h" />
+    <ClInclude Include="..\src\PaintBucket.h" />
+    <ClInclude Include="..\src\PaintBucketsManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
