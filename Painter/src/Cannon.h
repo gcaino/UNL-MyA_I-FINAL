@@ -2,6 +2,9 @@
 #define CANNON_H
 
 #include <SFML\Graphics.hpp>
+#include <vector>
+
+class Ball;
 
 class Cannon
 {
@@ -9,14 +12,18 @@ public:
 	Cannon();
 	~Cannon();
 
-	void processEvents();
+	void changeColorBall();
+	void shootBall();
+	void accumulateVelocityXAxis();
 	void update(sf::Time deltaTime);
 	void draw(sf::RenderWindow& window);
 
 private:
 	void lookAtMouse(sf::RenderWindow& window);
-	void shootBall();
-	void changeColoredBall();
+	void updateShootPosition();
+	void createColorBall();
+	bool existInactiveBall();
+	Ball* getInactiveColorBall();
 
 	static const int MAX_COLORED_BALL = 3;
 	enum COLORS { RED, BLUE, GREEN };
@@ -29,8 +36,14 @@ private:
 	sf::Texture	_cannonRedBallTexture;
 	sf::Texture	_cannonGreenBallTexture;
 
-	sf::Texture	_cannonColoredBallTextures[MAX_COLORED_BALL];
-	sf::Sprite	_cannonColoredBallSprite;
+	sf::Texture	_cannonColorBallTextures[MAX_COLORED_BALL];
+	sf::Sprite	_cannonColorBallSprite;
+
+	sf::Texture	_ballColorTextures[MAX_COLORED_BALL];
+
+	std::vector<Ball*> _balls;
+	Ball*			   _currentColorBall;
+	sf::Vector2f	   _currentVelocity;
 
 };
 

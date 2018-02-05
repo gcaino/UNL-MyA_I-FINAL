@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Ball.cpp" />
     <ClCompile Include="..\src\Cannon.cpp" />
     <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="..\src\PaintBucketsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Ball.h" />
     <ClInclude Include="..\src\Cannon.h" />
     <ClInclude Include="..\src\Game.h" />
     <ClInclude Include="..\src\PaintBucket.h" />
