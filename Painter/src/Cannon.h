@@ -14,18 +14,20 @@ public:
 
 	void changeColorBall();
 	void shootBall();
-	void accumulateVelocityXAxis();
+	void accumulatePower();
 	void update(sf::Time deltaTime);
 	void draw(sf::RenderWindow& window);
+	float getPower() { return _power; }
 
 private:
 	void lookAtMouse(sf::RenderWindow& window);
-	void updateShootPosition();
 	void createColorBall();
 	bool existInactiveBall();
 	Ball* getInactiveColorBall();
 
 	static const int MAX_COLORED_BALL = 3;
+	const float BASE_POWER = 50.f;
+	const float UNIT_INCREASE_POWER = 5.f;
 	enum COLORS { RED, BLUE, GREEN };
 	int			_currentColor;
 
@@ -44,6 +46,8 @@ private:
 	std::vector<Ball*> _balls;
 	Ball*			   _currentColorBall;
 	sf::Vector2f	   _currentVelocity;
+
+	float			   _power;
 
 };
 

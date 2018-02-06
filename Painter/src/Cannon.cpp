@@ -3,6 +3,7 @@
 
 Cannon::Cannon()
 	: _currentVelocity(0.f, 0.f)
+	, _power(BASE_POWER)
 {
 	_cannonTexture.loadFromFile("assets/textures/spr_cannon_barrel.png");
 	_cannonSprite.setTexture(_cannonTexture);
@@ -51,18 +52,20 @@ void Cannon::shootBall()
 	sf::Vector2f point = tmpTransform.transformPoint(_currentColorBall->getSprite().getPosition());
 	_currentColorBall->setPosition(point);
 
-	_currentColorBall->setAcceleration(sf::Vector2f(0.f, 9.8f));
+	_currentColorBall->setAcceleration(sf::Vector2f(0.f, 25.f));
+
+	const float PI = 3.14159265f;
+	_currentVelocity.x = _power * cos(_cannonSprite.getRotation() * PI / 180);
+	_currentVelocity.y = _power * sin(_cannonSprite.getRotation() * PI / 180);
 	_currentColorBall->setVelocity(_currentVelocity);
-	_currentVelocity = sf::Vector2f(0.f, 0.f);
+
+	_power = BASE_POWER;
 }
 
-void Cannon::accumulateVelocityXAxis()
+void Cannon::accumulatePower()
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		_currentVelocity.x += 5.f;
-		_currentVelocity.y -= 5.f;
-	}
+		_power += UNIT_INCREASE_POWER;
 }
 
 bool Cannon::existInactiveBall()

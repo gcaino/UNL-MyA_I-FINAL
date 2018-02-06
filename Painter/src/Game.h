@@ -23,7 +23,8 @@ private:
 	void loadFontsAndSetTexts();
 	void drawLives() const;
 	void pause();
-	void setScore();
+	void updateScoreBar();
+	void updatePowerBar();
 
 	const int WINDOW_WIDTH = 800;
 	const int WINDOW_HEIGHT = 480;
@@ -43,13 +44,15 @@ private:
 	sf::Sprite			_backgroundSprite;
 	sf::Texture			_liveTexture;
 	sf::Sprite			_liveSprite[MAX_LIVES];
-	sf::Texture			_scoreBarTexture;
-	sf::Sprite			_scoreBarSprite;
+	sf::Texture			_barTexture;
+	sf::Sprite			_scoreSpriteBar;
+	sf::Sprite			_powerSpriteBar;
 	sf::Texture			_gameOverTexture;
 	sf::Sprite			_gameOverSprite;
 	
 	sf::Font			_font;
 	sf::Text			_scoreText;
+	sf::Text			_powerText;
 };
 
 #endif // !GAME_H

@@ -23,12 +23,13 @@ public:
 	sf::Sprite& getSprite() { return _ballSprite; }
 
 private:
-	void obliqueMovement(sf::Time deltaTime);
+	void movement(sf::Time deltaTime);
 
 	sf::Sprite		_ballSprite;
 	bool			_active;
 	sf::Vector2f	_velocity;
 	sf::Vector2f	_acceleration;
+	sf::Vector2f	_position;
 
 };
 
