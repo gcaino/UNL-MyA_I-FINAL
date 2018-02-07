@@ -2,6 +2,7 @@
 #define BALL_H
 
 #include <SFML\Graphics.hpp>
+#include "enums.h"
 
 class Ball
 {
@@ -21,6 +22,9 @@ public:
 	void setRotation(float rotation) { _ballSprite.setRotation(rotation); }
 	void setOrigin(sf::Vector2f origin) { _ballSprite.setOrigin(origin); }
 	sf::Sprite& getSprite() { return _ballSprite; }
+	
+	Utils::COLORS getColor() const { return _color; }
+	void setColor(Utils::COLORS color) { _color = color; }
 
 private:
 	void movement(sf::Time deltaTime);
@@ -30,6 +34,7 @@ private:
 	sf::Vector2f	_velocity;
 	sf::Vector2f	_acceleration;
 	sf::Vector2f	_position;
+	Utils::COLORS	_color;
 
 };
 

@@ -1,8 +1,11 @@
 #include "Cannon.h"
 #include "Ball.h"
+#include "Game.h"
+#include "enums.h"
 
-Cannon::Cannon()
-	: _currentVelocity(0.f, 0.f)
+Cannon::Cannon(Game* game)
+	: _game(game)
+	, _currentVelocity(0.f, 0.f)
 	, _power(BASE_POWER)
 {
 	_cannonTexture.loadFromFile("assets/textures/spr_cannon_barrel.png");
@@ -10,15 +13,15 @@ Cannon::Cannon()
 	_cannonSprite.setOrigin(34.f, 34.f);
 	_cannonSprite.setPosition(72.f, 405.f);
 
-	_cannonColorBallTextures[COLORS::RED].loadFromFile("assets/textures/spr_cannon_red.png");
-	_cannonColorBallTextures[COLORS::BLUE].loadFromFile("assets/textures/spr_cannon_blue.png");
-	_cannonColorBallTextures[COLORS::GREEN].loadFromFile("assets/textures/spr_cannon_green.png");
+	_cannonColorBallTextures[Utils::COLORS::RED].loadFromFile("assets/textures/spr_cannon_red.png");
+	_cannonColorBallTextures[Utils::COLORS::BLUE].loadFromFile("assets/textures/spr_cannon_blue.png");
+	_cannonColorBallTextures[Utils::COLORS::GREEN].loadFromFile("assets/textures/spr_cannon_green.png");
 
-	_ballColorTextures[COLORS::RED].loadFromFile("assets/textures/spr_ball_red.png");
-	_ballColorTextures[COLORS::BLUE].loadFromFile("assets/textures/spr_ball_blue.png");
-	_ballColorTextures[COLORS::GREEN].loadFromFile("assets/textures/spr_ball_green.png");
+	_ballColorTextures[Utils::COLORS::RED].loadFromFile("assets/textures/spr_ball_red.png");
+	_ballColorTextures[Utils::COLORS::BLUE].loadFromFile("assets/textures/spr_ball_blue.png");
+	_ballColorTextures[Utils::COLORS::GREEN].loadFromFile("assets/textures/spr_ball_green.png");
 
-	_currentColor = COLORS::RED;
+	_currentColor = Utils::COLORS::RED;
 
 	_cannonColorBallSprite.setTexture(_cannonColorBallTextures[_currentColor]);
 	_cannonColorBallSprite.setPosition(_cannonSprite.getPosition().x - 17.f,
@@ -27,6 +30,20 @@ Cannon::Cannon()
 
 Cannon::~Cannon()
 {
+}
+
+void Cannon::processEvents(sf::Event event)
+{
+	if (event.type == sf::Event::MouseButtonPressed &&
+		event.mouseButton.button == sf::Mouse::Right)
+	{
+		changeColorBall();
+	}
+	else if (event.type == sf::Event::MouseButtonReleased &&
+		event.mouseButton.button == sf::Mouse::Left)
+	{
+		shootBall();
+	}
 }
 
 void Cannon::shootBall()
@@ -42,6 +59,7 @@ void Cannon::shootBall()
 	}
 
 	_currentColorBall->setSpriteColor(_cannonColorBallTextures[_currentColor]);
+	_currentColorBall->setColor(_currentColor);
 	_currentColorBall->setOrigin(sf::Vector2f(_currentColorBall->getSprite().getGlobalBounds().width / 2,
 											  _currentColorBall->getSprite().getGlobalBounds().height / 2));
 	_currentColorBall->getSprite().setScale(0.75f, 0.75f);
@@ -52,7 +70,7 @@ void Cannon::shootBall()
 	sf::Vector2f point = tmpTransform.transformPoint(_currentColorBall->getSprite().getPosition());
 	_currentColorBall->setPosition(point);
 
-	_currentColorBall->setAcceleration(sf::Vector2f(0.f, 25.f));
+	_currentColorBall->setAcceleration(sf::Vector2f(0.f, 225.f));
 
 	const float PI = 3.14159265f;
 	_currentVelocity.x = _power * cos(_cannonSprite.getRotation() * PI / 180);
@@ -105,13 +123,15 @@ void Cannon::createColorBall()
 void Cannon::changeColorBall()
 {
 	++_currentColor;
-	if (_currentColor >= MAX_COLORED_BALL)
-		_currentColor = COLORS::RED;
+	if (_currentColor >= Utils::COLORS::TOTAL)
+		_currentColor = Utils::COLORS::RED;
 	_cannonColorBallSprite.setTexture(_cannonColorBallTextures[_currentColor]);
 }
 
 void Cannon::update(sf::Time deltaTime)
 {
+	lookAtMouse(*_game->getWindow());
+
 	for (size_t i = 0; i < _balls.size(); i++)
 	{
 		if (_balls[i]->isActive())
@@ -134,10 +154,14 @@ void Cannon::lookAtMouse(sf::RenderWindow& window)
 	_cannonSprite.setRotation(rotation);
 }
 
+void Cannon::reset()
+{
+	for (size_t i = 0; i < _balls.size(); i++)
+		_balls[i]->setActive(false);
+}
+
 void Cannon::draw(sf::RenderWindow& window)
 {
-	lookAtMouse(window);
-
 	for (size_t i = 0; i < _balls.size(); i++)
 	{
 		if (_balls[i]->isActive())

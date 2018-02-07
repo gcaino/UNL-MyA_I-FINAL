@@ -4,7 +4,6 @@ PaintBucket::PaintBucket()
 	: _active(false)
 	, _velocity(0.f, 0.f)
 	, _acceleration(0.f, 0.f)
-	, _indexOccupiedSpawningPosition(0)
 {
 }
 

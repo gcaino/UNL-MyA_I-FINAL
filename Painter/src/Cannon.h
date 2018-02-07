@@ -3,24 +3,30 @@
 
 #include <SFML\Graphics.hpp>
 #include <vector>
+#include "enums.h"
 
 class Ball;
+class Game;
 
 class Cannon
 {
 public:
-	Cannon();
+	Cannon(Game* game);
 	~Cannon();
 
-	void changeColorBall();
-	void shootBall();
+	void processEvents(sf::Event event);
 	void accumulatePower();
 	void update(sf::Time deltaTime);
 	void draw(sf::RenderWindow& window);
 	float getPower() { return _power; }
+	void setPowerToBase() { _power = BASE_POWER; }
+	std::vector<Ball*> getBalls() { return _balls; }
+	void reset();
 
 private:
 	void lookAtMouse(sf::RenderWindow& window);
+	void changeColorBall();
+	void shootBall();
 	void createColorBall();
 	bool existInactiveBall();
 	Ball* getInactiveColorBall();
@@ -28,8 +34,8 @@ private:
 	static const int MAX_COLORED_BALL = 3;
 	const float BASE_POWER = 50.f;
 	const float UNIT_INCREASE_POWER = 5.f;
-	enum COLORS { RED, BLUE, GREEN };
-	int			_currentColor;
+	
+	Utils::COLORS _currentColor;
 
 	sf::Texture	_cannonTexture;
 	sf::Sprite	_cannonSprite;
@@ -43,6 +49,7 @@ private:
 
 	sf::Texture	_ballColorTextures[MAX_COLORED_BALL];
 
+	Game*			   _game;
 	std::vector<Ball*> _balls;
 	Ball*			   _currentColorBall;
 	sf::Vector2f	   _currentVelocity;

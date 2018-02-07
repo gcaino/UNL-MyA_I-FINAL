@@ -1,7 +1,10 @@
 #include <iostream>
+#include <vector>
 #include "Game.h"
 #include "Cannon.h"
+#include "Ball.h"
 #include "PaintBucketsManager.h"
+#include "PaintBucket.h"
 
 Game::Game()
 	: _window()
@@ -10,6 +13,7 @@ Game::Game()
 	, _lives(MAX_LIVES)
 	, _score(0)
 	, _paused(false)
+	, _currentState(STATE::MENU)
 {
 	_window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "MyA I - TRABAJO FINAL");
 	_window->setFramerateLimit(FPS);
@@ -18,8 +22,8 @@ Game::Game()
 	loadTexturesAndSetSprites();
 	loadFontsAndSetTexts();
 
-	_cannon = new Cannon();
-	_paintBucketsManager = new PaintBucketsManager();
+	_cannon = new Cannon(this);
+	_paintBucketsManager = new PaintBucketsManager(this);
 }
 
 Game::~Game()
@@ -34,11 +38,17 @@ void Game::loadTexturesAndSetSprites()
 	_backgroundTexture.loadFromFile("assets/textures/spr_background.jpg");
 	_backgroundSprite.setTexture(_backgroundTexture);
 
-	_crosshairTexture.loadFromFile("assets/textures/crosshair.png");
+	_menuScreenTexture.loadFromFile("assets/textures/spr_menu_screen_b.jpg");
+	_menuScreenSprite.setTexture(_menuScreenTexture);
+
+	_instructionsTexture.loadFromFile("assets/textures/spr_instructions_screen.jpg");
+	_instructionsSprite.setTexture(_instructionsTexture);
+
+	_crosshairTexture.loadFromFile("assets/textures/brush.png");
 	_crosshairSprite.setTexture(_crosshairTexture);
 	_crosshairSprite.setOrigin(_crosshairSprite.getGlobalBounds().width / 2,
 							   _crosshairSprite.getGlobalBounds().height / 2);
-	_crosshairSprite.setScale(.5f, .5f);
+	_crosshairSprite.setScale(.35f, .35f);
 
 	_barTexture.loadFromFile("assets/textures/spr_scorebar.jpg");
 	_scoreSpriteBar.setTexture(_barTexture);
@@ -58,11 +68,14 @@ void Game::loadTexturesAndSetSprites()
 	
 	_gameOverTexture.loadFromFile("assets/textures/spr_gameover_click.png");
 	_gameOverSprite.setTexture(_gameOverTexture);
+	_gameOverSprite.setOrigin(_gameOverSprite.getGlobalBounds().width / 2, _gameOverSprite.getGlobalBounds().height / 2);
+	_gameOverSprite.setPosition(static_cast<float>(_window->getSize().x) / 2, static_cast<float>(_window->getSize().y / 2));
 }
 
 void Game::loadFontsAndSetTexts()
 {
 	_font.loadFromFile("assets/fonts/PaytoneOne-Regular.ttf");
+
 	_scoreText.setFont(_font);
 	_scoreText.setFillColor(sf::Color::White);
 	_scoreText.setPosition(_scoreSpriteBar.getPosition().x + 10.f, 
@@ -109,18 +122,28 @@ void Game::processEvents()
 		{
 			pause();
 		}
-		else if (event.type == sf::Event::MouseButtonPressed &&
-			event.mouseButton.button == sf::Mouse::Right)
+
+		switch (_currentState)
 		{
-			_cannon->changeColorBall();
-		}
-		else if (event.type == sf::Event::MouseButtonReleased && 
-			event.mouseButton.button == sf::Mouse::Left)
-		{
-			_cannon->shootBall();
+		case STATE::MENU:
+			checkIfStart(event);
+			break;
+		case STATE::INSTRUCTIONS:
+			checkIfPlay(event);
+			break;
+		case STATE::GAMEPLAY:
+			_cannon->processEvents(event);
+			break;
+		case STATE::GAMEOVER:
+			checkIfStartAgain(event);
+			break;
+		default:
+			break;
 		}
 	}
-	_cannon->accumulatePower();
+
+	if (_currentState == STATE::GAMEPLAY)
+		_cannon->accumulatePower();
 }
 
 void Game::pause()
@@ -128,13 +151,38 @@ void Game::pause()
 	_paused = !_paused;
 }
 
+void Game::checkIfStart(sf::Event event)
+{
+	if (event.type == sf::Event::MouseButtonReleased &&
+		event.mouseButton.button == sf::Mouse::Left)
+	{
+		_currentState = STATE::INSTRUCTIONS;
+	}
+}
+
+void Game::checkIfPlay(sf::Event event)
+{
+	if (event.type == sf::Event::MouseButtonReleased &&
+		event.mouseButton.button == sf::Mouse::Left)
+	{
+		_currentState = STATE::GAMEPLAY;
+	}
+}
+
 void Game::update(sf::Time deltaTime)
 {
 	addSpriteToMousePointer();
-	_paintBucketsManager->update(deltaTime);
-	_paintBucketsManager->checkIfPaintBucketLeftWindow(*_window);
-	_cannon->update(deltaTime);
-	updatePowerBar();
+
+	if (_currentState == STATE::GAMEPLAY)
+	{
+		_paintBucketsManager->update(deltaTime);
+		_paintBucketsManager->checkIfPaintBucketLeftWindow(*_window);
+		_cannon->update(deltaTime);
+		updatePowerBar();
+		checkCollisions();
+		checkIfBallLeftWindow();
+		checkDefeatCondition();
+	}
 }
 
 void Game::addSpriteToMousePointer()
@@ -152,18 +200,122 @@ void Game::updatePowerBar()
 	_powerText.setString("Power: " + std::to_string(static_cast<int>(_cannon->getPower())));
 }
 
+void Game::checkCollisions()
+{
+	if (_cannon->getBalls().empty())
+		return;
+
+	std::vector<Ball*> balls = _cannon->getBalls();
+	std::vector<PaintBucket*> paintBuckets = _paintBucketsManager->getPaintBuckets();
+	int maxPaintBuckets = _paintBucketsManager->getPaintBuckets().size();
+	for (size_t i = 0; i < balls.size(); i++)
+	{
+		if (balls[i]->isActive())
+		{
+			for (int j = 0; j < maxPaintBuckets; j++)
+			{
+				if (balls[i]->getSprite().getGlobalBounds().intersects(paintBuckets[j]->getSprite().getGlobalBounds()))
+				{
+					balls[i]->setActive(false);
+					paintBuckets[j]->getSprite().setTexture(_paintBucketsManager->getPaintBucketTexturesByColor(balls[i]->getColor()));
+					paintBuckets[j]->setColor(balls[i]->getColor());
+				}
+			}
+		}
+	}
+}
+
+void Game::updateScore()
+{
+	_score += SCORE_POINTS;
+	updateScoreBar();
+}
+
+void Game::decreaseLifeByOne()
+{
+	--_lives;
+}
+
+void Game::checkIfBallLeftWindow()
+{
+	std::vector<Ball*> balls = _cannon->getBalls();
+	int totalBalls = _cannon->getBalls().size();
+	for (int i = 0; i < totalBalls; i++)
+	{
+		if (balls[i]->isActive())
+		{
+			if (balls[i]->getSprite().getPosition().x > _window->getSize().x ||
+				balls[i]->getSprite().getPosition().x < 0 ||
+				balls[i]->getSprite().getPosition().y > _window->getSize().y ||
+				balls[i]->getSprite().getPosition().y < 0)
+			{
+				balls[i]->setActive(false);
+			}
+		}
+	}
+}
+
+void Game::checkDefeatCondition()
+{
+	if (_lives <= 0)
+	{
+		_currentState = STATE::GAMEOVER;
+	}
+}
+
+void Game::checkIfStartAgain(sf::Event event)
+{
+	if (event.type == sf::Event::MouseButtonReleased &&
+		event.mouseButton.button == sf::Mouse::Left)
+	{
+		reset();
+	}
+}
+
+void Game::reset()
+{
+	_score = 0;
+	updateScoreBar();
+	_lives = MAX_LIVES;
+	drawLives();
+	_cannon->setPowerToBase();
+	_paintBucketsManager->reset();
+	_cannon->reset();
+	_currentState = STATE::GAMEPLAY;
+}
+
 void Game::draw()
 {
 	_window->clear();
 
-	_window->draw(_backgroundSprite);
-	_paintBucketsManager->draw(*_window);
-	_cannon->draw(*_window);
-	_window->draw(_scoreSpriteBar);
-	_window->draw(_powerSpriteBar);
-	_window->draw(_scoreText);
-	_window->draw(_powerText);
-	drawLives();
+	switch (_currentState)
+	{
+	case STATE::MENU:
+		_window->draw(_menuScreenSprite);
+		break;
+	case STATE::INSTRUCTIONS:
+		_window->draw(_instructionsSprite);
+		break;
+	case STATE::GAMEPLAY:
+		_window->draw(_backgroundSprite);
+		_paintBucketsManager->draw(*_window);
+		_cannon->draw(*_window);
+		_window->draw(_scoreSpriteBar);
+		_window->draw(_powerSpriteBar);
+		_window->draw(_scoreText);
+		_window->draw(_powerText);
+		drawLives();
+		break;
+	case STATE::GAMEOVER:
+		_window->draw(_backgroundSprite);
+		_cannon->draw(*_window);
+		_window->draw(_scoreSpriteBar);
+		_window->draw(_scoreText);
+		_window->draw(_gameOverSprite);
+		break;
+	default:
+		break;
+	}
 	_window->draw(_crosshairSprite);
 
 	_window->display();
