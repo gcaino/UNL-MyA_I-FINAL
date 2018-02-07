@@ -2,6 +2,7 @@
 #define CANNON_H
 
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 #include <vector>
 #include "enums.h"
 
@@ -39,21 +40,22 @@ private:
 
 	sf::Texture	_cannonTexture;
 	sf::Sprite	_cannonSprite;
-
 	sf::Texture	_cannonBlueBallTexture;
 	sf::Texture	_cannonRedBallTexture;
 	sf::Texture	_cannonGreenBallTexture;
-
 	sf::Texture	_cannonColorBallTextures[MAX_COLORED_BALL];
 	sf::Sprite	_cannonColorBallSprite;
-
 	sf::Texture	_ballColorTextures[MAX_COLORED_BALL];
+
+	sf::SoundBuffer _shootPaintSoundBuffer;
+	sf::Sound		_shootPaintSound;
+	sf::SoundBuffer	_changeColorSoundBuffer;
+	sf::Sound		_changeColorSound;
 
 	Game*			   _game;
 	std::vector<Ball*> _balls;
 	Ball*			   _currentColorBall;
 	sf::Vector2f	   _currentVelocity;
-
 	float			   _power;
 
 };

@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 
 class Cannon;
 class PaintBucketsManager;
@@ -24,6 +25,7 @@ private:
 	void addSpriteToMousePointer();
 	void loadTexturesAndSetSprites();
 	void loadFontsAndSetTexts();
+	void loadSoundBuffersAndSetSounds();
 	void drawLives() const;
 	void pause();
 	void updateScoreBar();
@@ -71,6 +73,14 @@ private:
 	sf::Font			_font;
 	sf::Text			_scoreText;
 	sf::Text			_powerText;
+
+	sf::SoundBuffer		_buttonClickSoundBuffer;
+	sf::Sound			_buttonClickSound;
+	sf::SoundBuffer		_bubblePopSoundBuffer;
+	sf::Sound			_bubblePopSound;
+	sf::SoundBuffer		_balloonExplodesSoundBuffer;
+	sf::Sound			_balloonExplodesSound;
+	sf::Music			_music;
 };
 
 #endif // !GAME_H

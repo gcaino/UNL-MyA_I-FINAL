@@ -26,6 +26,12 @@ Cannon::Cannon(Game* game)
 	_cannonColorBallSprite.setTexture(_cannonColorBallTextures[_currentColor]);
 	_cannonColorBallSprite.setPosition(_cannonSprite.getPosition().x - 17.f,
 									   _cannonSprite.getPosition().y - 15.f);
+
+	_shootPaintSoundBuffer.loadFromFile("assets/audio/snd_shoot_paint.ogg");
+	_shootPaintSound.setBuffer(_shootPaintSoundBuffer);
+
+	_changeColorSoundBuffer.loadFromFile("assets/audio/snd_switch.ogg");
+	_changeColorSound.setBuffer(_changeColorSoundBuffer);
 }
 
 Cannon::~Cannon()
@@ -78,6 +84,8 @@ void Cannon::shootBall()
 	_currentColorBall->setVelocity(_currentVelocity);
 
 	_power = BASE_POWER;
+
+	_shootPaintSound.play();
 }
 
 void Cannon::accumulatePower()
@@ -126,6 +134,8 @@ void Cannon::changeColorBall()
 	if (_currentColor >= Utils::COLORS::TOTAL)
 		_currentColor = Utils::COLORS::RED;
 	_cannonColorBallSprite.setTexture(_cannonColorBallTextures[_currentColor]);
+
+	_changeColorSound.play();
 }
 
 void Cannon::update(sf::Time deltaTime)

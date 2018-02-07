@@ -2,6 +2,7 @@
 #define PAINT_BUCKETS_MANAGER_H
 
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 #include <vector>
 #include "PaintBucket.h"
 #include "enums.h"
@@ -47,6 +48,9 @@ private:
 	};
 
 	SpawningPosition _spawningPositions[MAX_SPAWNING_POSITIONS];
+
+	sf::SoundBuffer _collectPointsSoundBuffer;
+	sf::Sound		_collectPointsSound;
 };
 
 #endif // PAINT_BUCKETS_MANAGER_H

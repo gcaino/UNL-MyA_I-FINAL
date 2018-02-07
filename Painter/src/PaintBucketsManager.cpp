@@ -12,6 +12,9 @@ PaintBucketsManager::PaintBucketsManager(Game* game)
 	_paintBucketTextures[Utils::COLORS::RED].loadFromFile("assets/textures/spr_can_red.png");
 	_paintBucketTextures[Utils::COLORS::GREEN].loadFromFile("assets/textures/spr_can_green.png");
 
+	_collectPointsSoundBuffer.loadFromFile("assets/audio/snd_collect_points.ogg");
+	_collectPointsSound.setBuffer(_collectPointsSoundBuffer);
+
 	setSpawningPositions();
 	createPaintBuckets();
 }
@@ -132,6 +135,7 @@ void PaintBucketsManager::checkIfPaintBucketLeftWindow(sf::RenderWindow& window)
 			if (static_cast<int>(_paintBuckets[i]->getColor()) == _paintBuckets[i]->getIndexOccupiedSpawningPosition())
 			{
 				_game->updateScore();
+				_collectPointsSound.play();
 			}
 			else
 			{

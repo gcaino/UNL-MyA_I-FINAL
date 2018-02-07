@@ -21,7 +21,8 @@ Game::Game()
 
 	loadTexturesAndSetSprites();
 	loadFontsAndSetTexts();
-
+	loadSoundBuffersAndSetSounds();
+	
 	_cannon = new Cannon(this);
 	_paintBucketsManager = new PaintBucketsManager(this);
 }
@@ -70,6 +71,9 @@ void Game::loadTexturesAndSetSprites()
 	_gameOverSprite.setTexture(_gameOverTexture);
 	_gameOverSprite.setOrigin(_gameOverSprite.getGlobalBounds().width / 2, _gameOverSprite.getGlobalBounds().height / 2);
 	_gameOverSprite.setPosition(static_cast<float>(_window->getSize().x) / 2, static_cast<float>(_window->getSize().y / 2));
+
+	_buttonClickSoundBuffer.loadFromFile("assets/audio/snd_button_click.ogg");
+	_buttonClickSound.setBuffer(_buttonClickSoundBuffer);
 }
 
 void Game::loadFontsAndSetTexts()
@@ -87,6 +91,18 @@ void Game::loadFontsAndSetTexts()
 		_powerSpriteBar.getPosition().y);
 
 	updateScoreBar();
+}
+
+void Game::loadSoundBuffersAndSetSounds()
+{
+	_bubblePopSoundBuffer.loadFromFile("assets/audio/snd_bubble_pop.ogg");
+	_bubblePopSound.setBuffer(_bubblePopSoundBuffer);
+	_balloonExplodesSoundBuffer.loadFromFile("assets/audio/snd_balloon_explode.ogg");
+	_balloonExplodesSound.setBuffer(_balloonExplodesSoundBuffer);
+
+	_music.openFromFile("assets/audio/snd_circus_music.ogg");
+	_music.setVolume(40.f);
+	_music.setLoop(true);
 }
 
 void Game::loop()
@@ -149,6 +165,11 @@ void Game::processEvents()
 void Game::pause()
 {
 	_paused = !_paused;
+
+	if (_music.getStatus() == sf::Music::Playing)
+		_music.pause();
+	else
+		_music.play();
 }
 
 void Game::checkIfStart(sf::Event event)
@@ -157,6 +178,7 @@ void Game::checkIfStart(sf::Event event)
 		event.mouseButton.button == sf::Mouse::Left)
 	{
 		_currentState = STATE::INSTRUCTIONS;
+		_buttonClickSound.play();
 	}
 }
 
@@ -166,6 +188,8 @@ void Game::checkIfPlay(sf::Event event)
 		event.mouseButton.button == sf::Mouse::Left)
 	{
 		_currentState = STATE::GAMEPLAY;
+		_buttonClickSound.play();
+		_music.play();
 	}
 }
 
@@ -216,6 +240,7 @@ void Game::checkCollisions()
 			{
 				if (balls[i]->getSprite().getGlobalBounds().intersects(paintBuckets[j]->getSprite().getGlobalBounds()))
 				{
+					_bubblePopSound.play();
 					balls[i]->setActive(false);
 					paintBuckets[j]->getSprite().setTexture(_paintBucketsManager->getPaintBucketTexturesByColor(balls[i]->getColor()));
 					paintBuckets[j]->setColor(balls[i]->getColor());
@@ -234,6 +259,7 @@ void Game::updateScore()
 void Game::decreaseLifeByOne()
 {
 	--_lives;
+	_balloonExplodesSound.play();
 }
 
 void Game::checkIfBallLeftWindow()
@@ -260,14 +286,16 @@ void Game::checkDefeatCondition()
 	if (_lives <= 0)
 	{
 		_currentState = STATE::GAMEOVER;
+		_music.stop();
 	}
 }
 
 void Game::checkIfStartAgain(sf::Event event)
 {
-	if (event.type == sf::Event::MouseButtonReleased &&
+	if (event.type == sf::Event::MouseButtonPressed &&
 		event.mouseButton.button == sf::Mouse::Left)
 	{
+		_buttonClickSound.play();
 		reset();
 	}
 }
@@ -282,6 +310,7 @@ void Game::reset()
 	_paintBucketsManager->reset();
 	_cannon->reset();
 	_currentState = STATE::GAMEPLAY;
+	_music.play();
 }
 
 void Game::draw()
