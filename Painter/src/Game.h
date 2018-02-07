@@ -37,12 +37,14 @@ private:
 	void reset();
 	void checkIfPlay(sf::Event event);
 	void checkIfStart(sf::Event event);
+	void checkIfLifeIncreases();
 	
 	const int WINDOW_WIDTH = 800;
 	const int WINDOW_HEIGHT = 480;
 	const int FPS = 60;
 	const int SCORE_POINTS = 10;
 	static const int MAX_LIVES = 5;
+	const int BASE_SCORE_POINTS_TO_GAIN_LIFE = 100;
 
 	enum STATE { MENU, INSTRUCTIONS, GAMEPLAY, PAUSE, GAMEOVER };
 	STATE				 _currentState;
@@ -52,6 +54,7 @@ private:
 	PaintBucketsManager* _paintBucketsManager;
 	int					 _lives;
 	int					 _score;
+	int					 _accumulatedScoreToGainLife;
 	bool				 _paused;
 
 	sf::Texture			_crosshairTexture;

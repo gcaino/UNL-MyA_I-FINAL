@@ -12,6 +12,7 @@ Game::Game()
 	, _paintBucketsManager()
 	, _lives(MAX_LIVES)
 	, _score(0)
+	, _accumulatedScoreToGainLife(0)
 	, _paused(false)
 	, _currentState(STATE::MENU)
 {
@@ -205,6 +206,7 @@ void Game::update(sf::Time deltaTime)
 		updatePowerBar();
 		checkCollisions();
 		checkIfBallLeftWindow();
+		checkIfLifeIncreases();
 		checkDefeatCondition();
 	}
 }
@@ -253,6 +255,7 @@ void Game::checkCollisions()
 void Game::updateScore()
 {
 	_score += SCORE_POINTS;
+	_accumulatedScoreToGainLife += SCORE_POINTS;
 	updateScoreBar();
 }
 
@@ -281,6 +284,16 @@ void Game::checkIfBallLeftWindow()
 	}
 }
 
+void Game::checkIfLifeIncreases()
+{
+	if (_accumulatedScoreToGainLife >= BASE_SCORE_POINTS_TO_GAIN_LIFE &&
+		_lives < MAX_LIVES)
+	{
+		++_lives;
+		_accumulatedScoreToGainLife -= BASE_SCORE_POINTS_TO_GAIN_LIFE;
+	}
+}
+
 void Game::checkDefeatCondition()
 {
 	if (_lives <= 0)
@@ -303,6 +316,7 @@ void Game::checkIfStartAgain(sf::Event event)
 void Game::reset()
 {
 	_score = 0;
+	_accumulatedScoreToGainLife = 0;
 	updateScoreBar();
 	_lives = MAX_LIVES;
 	drawLives();

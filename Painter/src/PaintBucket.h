@@ -17,9 +17,6 @@ public:
 	void setActive(bool active) { _active = active; }
 	sf::Sprite&	getSprite() { return _sprite; }
 	void setVerticalVelocity(float yVelocity) { _velocity.y = yVelocity; }
-	//void setIndexOccupiedSpawningPosition(int index) { _indexOccupiedSpawningPosition = index; }
-	//int getIndexOccupiedSpawningPosition() const { return _indexOccupiedSpawningPosition; }
-
 	void setIndexOccupiedSpawningPosition(Utils::COLORS index) { _indexOccupiedSpawningPosition = index; }
 	Utils::COLORS getIndexOccupiedSpawningPosition() const { return _indexOccupiedSpawningPosition; }
 
@@ -39,7 +36,6 @@ private:
 	bool			_active;
 	sf::Vector2f	_velocity;
 	sf::Vector2f	_acceleration;
-	//int				_indexOccupiedSpawningPosition;
 	Utils::COLORS	_indexOccupiedSpawningPosition;
 	Utils::COLORS	_color;
 

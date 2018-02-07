@@ -30,15 +30,20 @@ private:
 	void setRandomColorToPaintBucket(PaintBucket& paintBucket);
 	void setRandomSpawningPositionToPaintBucket(PaintBucket& paintBucket);
 	void setRandomVelocityToPaintBucket(PaintBucket& paintBucket);
+	void incremetMaxVelocity(sf::Time deltaTime);
 	
 	static const int MAX_PAINT_BUCKETS = 3;
 	static const int MAX_SPAWNING_POSITIONS = 3;
 	const sf::Time SPAWN_TIME = sf::seconds(3.f);
+	const sf::Time CHANGE_VELOCITY_TIME = sf::seconds(10.f);
+	const int BASE_VELOCITY = 30;
 
 	Game*		 _game;
 	std::vector<PaintBucket*> _paintBuckets;
 	sf::Time     _spawningTime;
 	sf::Texture  _paintBucketTextures[MAX_PAINT_BUCKETS];
+	int			 _maxVelocity;
+	sf::Time	 _elapsedTimeChangeVelocity;
 
 	struct SpawningPosition
 	{

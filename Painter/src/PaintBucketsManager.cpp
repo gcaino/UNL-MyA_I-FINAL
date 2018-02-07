@@ -7,6 +7,8 @@
 PaintBucketsManager::PaintBucketsManager(Game* game)
 	: _game(game)
 	, _spawningTime(sf::seconds(0.f))
+	, _maxVelocity(BASE_VELOCITY)
+	, _elapsedTimeChangeVelocity(sf::seconds(0.f))
 {
 	_paintBucketTextures[Utils::COLORS::BLUE].loadFromFile("assets/textures/spr_can_blue.png");
 	_paintBucketTextures[Utils::COLORS::RED].loadFromFile("assets/textures/spr_can_red.png");
@@ -55,6 +57,7 @@ void PaintBucketsManager::setSpawningPositions()
 void PaintBucketsManager::update(sf::Time deltaTime)
 {
 	spawnPaintBucket(deltaTime);
+	incremetMaxVelocity(deltaTime);
 
 	for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
 	{
@@ -122,7 +125,7 @@ void PaintBucketsManager::setRandomColorToPaintBucket(PaintBucket& paintBucket)
 
 void PaintBucketsManager::setRandomVelocityToPaintBucket(PaintBucket& paintBucket)
 {
-	float randomVelocity = static_cast<float>(rand() % 30 + 10);
+	float randomVelocity = static_cast<float>(rand() % _maxVelocity + 10);
 	paintBucket.setVerticalVelocity(randomVelocity);
 }
 
@@ -147,6 +150,16 @@ void PaintBucketsManager::checkIfPaintBucketLeftWindow(sf::RenderWindow& window)
 	}
 }
 
+void PaintBucketsManager::incremetMaxVelocity(sf::Time deltaTime)
+{
+	_elapsedTimeChangeVelocity += deltaTime;
+	if (_elapsedTimeChangeVelocity >= CHANGE_VELOCITY_TIME)
+	{
+		_maxVelocity += 10;
+		_elapsedTimeChangeVelocity -= CHANGE_VELOCITY_TIME;
+	}
+}
+
 void PaintBucketsManager::reset()
 {
 	for (int i = 0; i < MAX_SPAWNING_POSITIONS; i++)
@@ -159,6 +172,8 @@ void PaintBucketsManager::reset()
 		setRandomVelocityToPaintBucket(*_paintBuckets[j]);
 		_paintBuckets[j]->setActive(true);
 	}
+
+	_maxVelocity = BASE_VELOCITY;
 }
 
 void PaintBucketsManager::draw(sf::RenderWindow& window) const
