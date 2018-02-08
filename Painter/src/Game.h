@@ -39,8 +39,8 @@ private:
 	void checkIfStart(sf::Event event);
 	void checkIfLifeIncreases();
 	
-	const int WINDOW_WIDTH = 800;
-	const int WINDOW_HEIGHT = 480;
+	const int WINDOW_WIDTH = 1024;
+	const int WINDOW_HEIGHT = 768;
 	const int FPS = 60;
 	const int SCORE_POINTS = 10;
 	const int MAX_PAINT_BUCKETS = 3;
@@ -84,6 +84,8 @@ private:
 	sf::Sound			_bubblePopSound;
 	sf::SoundBuffer		_balloonExplodesSoundBuffer;
 	sf::Sound			_balloonExplodesSound;
+	sf::SoundBuffer		_gainLifeSoundBuffer;
+	sf::Sound			_gainLifeSound;
 	sf::Music			_music;
 };
 

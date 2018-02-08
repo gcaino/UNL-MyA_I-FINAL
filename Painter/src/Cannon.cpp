@@ -7,15 +7,17 @@ Cannon::Cannon(Game* game)
 	: _game(game)
 	, _currentVelocity(0.f, 0.f)
 	, _power(BASE_POWER)
+	, _origin(43.f, 43.f)
+	, _position(92.f, 648.f)
 {
-	_cannonTexture.loadFromFile("assets/textures/spr_cannon_barrel.png");
+	_cannonTexture.loadFromFile("assets/textures/spr_cannon_barrel_1024.png");
 	_cannonSprite.setTexture(_cannonTexture);
-	_cannonSprite.setOrigin(34.f, 34.f);
-	_cannonSprite.setPosition(72.f, 405.f);
+	_cannonSprite.setOrigin(_origin.x, _origin.y);
+	_cannonSprite.setPosition(_position.x, _position.y);
 
-	_cannonColorBallTextures[Utils::COLORS::RED].loadFromFile("assets/textures/spr_cannon_red.png");
-	_cannonColorBallTextures[Utils::COLORS::BLUE].loadFromFile("assets/textures/spr_cannon_blue.png");
-	_cannonColorBallTextures[Utils::COLORS::GREEN].loadFromFile("assets/textures/spr_cannon_green.png");
+	_cannonColorBallTextures[Utils::COLORS::RED].loadFromFile("assets/textures/spr_cannon_red_1024.png");
+	_cannonColorBallTextures[Utils::COLORS::BLUE].loadFromFile("assets/textures/spr_cannon_blue_1024.png");
+	_cannonColorBallTextures[Utils::COLORS::GREEN].loadFromFile("assets/textures/spr_cannon_green_1024.png");
 
 	_ballColorTextures[Utils::COLORS::RED].loadFromFile("assets/textures/spr_ball_red.png");
 	_ballColorTextures[Utils::COLORS::BLUE].loadFromFile("assets/textures/spr_ball_blue.png");
@@ -24,8 +26,8 @@ Cannon::Cannon(Game* game)
 	_currentColor = Utils::COLORS::RED;
 
 	_cannonColorBallSprite.setTexture(_cannonColorBallTextures[_currentColor]);
-	_cannonColorBallSprite.setPosition(_cannonSprite.getPosition().x - 17.f,
-									   _cannonSprite.getPosition().y - 15.f);
+	_cannonColorBallSprite.setPosition(_cannonSprite.getPosition().x - 21.f,
+									   _cannonSprite.getPosition().y - 20.f);
 
 	_shootPaintSoundBuffer.loadFromFile("assets/audio/snd_shoot_paint.ogg");
 	_shootPaintSound.setBuffer(_shootPaintSoundBuffer);
@@ -69,7 +71,7 @@ void Cannon::shootBall()
 	_currentColorBall->setOrigin(sf::Vector2f(_currentColorBall->getSprite().getGlobalBounds().width / 2,
 											  _currentColorBall->getSprite().getGlobalBounds().height / 2));
 	_currentColorBall->getSprite().setScale(0.75f, 0.75f);
-	_currentColorBall->getSprite().setPosition(72.f + 110.f, 405.f);
+	_currentColorBall->getSprite().setPosition(_position.x + 140.f, _position.y);
 
 	sf::Transform tmpTransform;
 	tmpTransform.rotate(_cannonSprite.getRotation(), _cannonSprite.getPosition());

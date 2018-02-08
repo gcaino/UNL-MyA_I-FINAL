@@ -34,7 +34,7 @@ private:
 
 	static const int MAX_COLORED_BALL = 3;
 	const float BASE_POWER = 50.f;
-	const float UNIT_INCREASE_POWER = 5.f;
+	const float UNIT_INCREASE_POWER = 7.f;
 	
 	Utils::COLORS _currentColor;
 
@@ -57,6 +57,8 @@ private:
 	Ball*			   _currentColorBall;
 	sf::Vector2f	   _currentVelocity;
 	float			   _power;
+	sf::Vector2f	   _origin;
+	sf::Vector2f	   _position;
 
 };
 

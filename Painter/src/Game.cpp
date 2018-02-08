@@ -37,13 +37,13 @@ Game::~Game()
 
 void Game::loadTexturesAndSetSprites()
 {
-	_backgroundTexture.loadFromFile("assets/textures/spr_background.jpg");
+	_backgroundTexture.loadFromFile("assets/textures/spr_background_1024.jpg");
 	_backgroundSprite.setTexture(_backgroundTexture);
 
-	_menuScreenTexture.loadFromFile("assets/textures/spr_menu_screen_b.jpg");
+	_menuScreenTexture.loadFromFile("assets/textures/spr_menu_screen_1024.jpg");
 	_menuScreenSprite.setTexture(_menuScreenTexture);
 
-	_instructionsTexture.loadFromFile("assets/textures/spr_instructions_screen.jpg");
+	_instructionsTexture.loadFromFile("assets/textures/spr_instructions_screen_1024.jpg");
 	_instructionsSprite.setTexture(_instructionsTexture);
 
 	_crosshairTexture.loadFromFile("assets/textures/brush.png");
@@ -100,6 +100,8 @@ void Game::loadSoundBuffersAndSetSounds()
 	_bubblePopSound.setBuffer(_bubblePopSoundBuffer);
 	_balloonExplodesSoundBuffer.loadFromFile("assets/audio/snd_balloon_explode.ogg");
 	_balloonExplodesSound.setBuffer(_balloonExplodesSoundBuffer);
+	_gainLifeSoundBuffer.loadFromFile("assets/audio/snd_gain_life.ogg");
+	_gainLifeSound.setBuffer(_gainLifeSoundBuffer);
 
 	_music.openFromFile("assets/audio/snd_circus_music.ogg");
 	_music.setVolume(40.f);
@@ -290,6 +292,7 @@ void Game::checkIfLifeIncreases()
 		_lives < MAX_LIVES)
 	{
 		++_lives;
+		_gainLifeSound.play();
 		_accumulatedScoreToGainLife -= BASE_SCORE_POINTS_TO_GAIN_LIFE;
 	}
 }

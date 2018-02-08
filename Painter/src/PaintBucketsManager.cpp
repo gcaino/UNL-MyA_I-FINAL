@@ -40,13 +40,13 @@ void PaintBucketsManager::destroyPaintBuckets()
 
 void PaintBucketsManager::setSpawningPositions()
 {
-	_spawningPositions[Utils::COLORS::RED].position = sf::Vector2f(450.f, -300.f);
+	_spawningPositions[Utils::COLORS::RED].position = sf::Vector2f(585.f, -300.f);
 	_spawningPositions[Utils::COLORS::RED].active = false;
 	_spawningPositions[Utils::COLORS::RED].color = Utils::COLORS::RED;
-	_spawningPositions[Utils::COLORS::GREEN].position = sf::Vector2f(580.f, -275.f);
+	_spawningPositions[Utils::COLORS::GREEN].position = sf::Vector2f(754.f, -275.f);
 	_spawningPositions[Utils::COLORS::GREEN].active = false;
 	_spawningPositions[Utils::COLORS::GREEN].color = Utils::COLORS::GREEN;
-	_spawningPositions[Utils::COLORS::BLUE].position = sf::Vector2f(700.f, -250.f);
+	_spawningPositions[Utils::COLORS::BLUE].position = sf::Vector2f(908.f, -250.f);
 	_spawningPositions[Utils::COLORS::BLUE].active = false;
 	_spawningPositions[Utils::COLORS::BLUE].color = Utils::COLORS::BLUE;
 }
