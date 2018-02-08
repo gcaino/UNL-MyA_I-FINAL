@@ -14,9 +14,7 @@ PaintBucket::~PaintBucket()
 void PaintBucket::update(sf::Time deltaTime)
 {
 	if (_active)
-	{
 		verticalMovement(deltaTime);
-	}
 }
 
 void PaintBucket::verticalMovement(sf::Time deltaTime)

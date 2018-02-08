@@ -4,7 +4,7 @@
 #include "PaintBucket.h"
 #include "enums.h"
 
-PaintBucketsManager::PaintBucketsManager(Game* game)
+PaintBucketsManager::PaintBucketsManager(Game* game, int totalPaintBuckets)
 	: _game(game)
 	, _spawningTime(sf::seconds(0.f))
 	, _maxVelocity(BASE_VELOCITY)
@@ -18,7 +18,7 @@ PaintBucketsManager::PaintBucketsManager(Game* game)
 	_collectPointsSound.setBuffer(_collectPointsSoundBuffer);
 
 	setSpawningPositions();
-	createPaintBuckets();
+	createPaintBuckets(totalPaintBuckets);
 }
 
 PaintBucketsManager::~PaintBucketsManager()
@@ -26,19 +26,16 @@ PaintBucketsManager::~PaintBucketsManager()
 	destroyPaintBuckets();
 }
 
-void PaintBucketsManager::createPaintBuckets()
+void PaintBucketsManager::createPaintBuckets(int quantity)
 {
-	for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
+	for (int i = 0; i < quantity; i++)
 		_paintBuckets.push_back(new PaintBucket());
 }
 
 void PaintBucketsManager::destroyPaintBuckets()
 {
-	for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
-	{
+	for (size_t i = 0; i < _paintBuckets.size(); i++)
 		delete _paintBuckets[i];
-		_paintBuckets[i] = nullptr;
-	}
 }
 
 void PaintBucketsManager::setSpawningPositions()
@@ -59,7 +56,7 @@ void PaintBucketsManager::update(sf::Time deltaTime)
 	spawnPaintBucket(deltaTime);
 	incremetMaxVelocity(deltaTime);
 
-	for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
+	for (size_t i = 0; i < _paintBuckets.size(); i++)
 	{
 		if (_paintBuckets[i]->isActive())
 		{
@@ -74,7 +71,7 @@ void PaintBucketsManager::spawnPaintBucket(sf::Time deltaTime)
 	_spawningTime += deltaTime;
 	if (_spawningTime >= SPAWN_TIME)
 	{
-		for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
+		for (size_t i = 0; i < _paintBuckets.size(); i++)
 		{
 			if (!_paintBuckets[i]->isActive())
 			{
@@ -131,7 +128,7 @@ void PaintBucketsManager::setRandomVelocityToPaintBucket(PaintBucket& paintBucke
 
 void PaintBucketsManager::checkIfPaintBucketLeftWindow(sf::RenderWindow& window)
 {
-	for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
+	for (size_t i = 0; i < _paintBuckets.size(); i++)
 	{
 		if (_paintBuckets[i]->isActive() && _paintBuckets[i]->getSprite().getPosition().y > window.getSize().y)
 		{
@@ -165,19 +162,19 @@ void PaintBucketsManager::reset()
 	for (int i = 0; i < MAX_SPAWNING_POSITIONS; i++)
 		_spawningPositions[i].active = false;
 
-	for (int j = 0; j < MAX_PAINT_BUCKETS; j++)
+	for (size_t j = 0; j < _paintBuckets.size(); j++)
 	{
 		setRandomColorToPaintBucket(*_paintBuckets[j]);
 		setRandomSpawningPositionToPaintBucket(*_paintBuckets[j]);
+		_maxVelocity = BASE_VELOCITY;
 		setRandomVelocityToPaintBucket(*_paintBuckets[j]);
+		_paintBuckets[j]->setAcceleration(sf::Vector2f(0.f, 0.f));
 		_paintBuckets[j]->setActive(true);
 	}
-
-	_maxVelocity = BASE_VELOCITY;
 }
 
 void PaintBucketsManager::draw(sf::RenderWindow& window) const
 {
-	for (int i = 0; i < MAX_PAINT_BUCKETS; i++)
+	for (size_t i = 0; i < _paintBuckets.size(); i++)
 		_paintBuckets[i]->draw(window);
 }

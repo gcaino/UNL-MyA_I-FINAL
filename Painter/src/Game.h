@@ -43,6 +43,7 @@ private:
 	const int WINDOW_HEIGHT = 480;
 	const int FPS = 60;
 	const int SCORE_POINTS = 10;
+	const int MAX_PAINT_BUCKETS = 3;
 	static const int MAX_LIVES = 5;
 	const int BASE_SCORE_POINTS_TO_GAIN_LIFE = 100;
 

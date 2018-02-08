@@ -91,7 +91,9 @@ void Cannon::shootBall()
 void Cannon::accumulatePower()
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
 		_power += UNIT_INCREASE_POWER;
+	}
 }
 
 bool Cannon::existInactiveBall()

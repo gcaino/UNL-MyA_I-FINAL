@@ -25,7 +25,7 @@ Game::Game()
 	loadSoundBuffersAndSetSounds();
 	
 	_cannon = new Cannon(this);
-	_paintBucketsManager = new PaintBucketsManager(this);
+	_paintBucketsManager = new PaintBucketsManager(this, MAX_PAINT_BUCKETS);
 }
 
 Game::~Game()
@@ -68,7 +68,7 @@ void Game::loadTexturesAndSetSprites()
 			_scoreSpriteBar.getPosition().y + _scoreSpriteBar.getGlobalBounds().height + 10.f);
 	}
 	
-	_gameOverTexture.loadFromFile("assets/textures/spr_gameover_click.png");
+	_gameOverTexture.loadFromFile("assets/textures/spr_gameover_enter.png");
 	_gameOverSprite.setTexture(_gameOverTexture);
 	_gameOverSprite.setOrigin(_gameOverSprite.getGlobalBounds().width / 2, _gameOverSprite.getGlobalBounds().height / 2);
 	_gameOverSprite.setPosition(static_cast<float>(_window->getSize().x) / 2, static_cast<float>(_window->getSize().y / 2));
@@ -305,8 +305,8 @@ void Game::checkDefeatCondition()
 
 void Game::checkIfStartAgain(sf::Event event)
 {
-	if (event.type == sf::Event::MouseButtonPressed &&
-		event.mouseButton.button == sf::Mouse::Left)
+	if (event.type == sf::Event::KeyReleased &&
+		event.key.code == sf::Keyboard::Return)
 	{
 		_buttonClickSound.play();
 		reset();
