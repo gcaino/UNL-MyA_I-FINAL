@@ -15,7 +15,7 @@ Link de descarga: https://www.sfml-dev.org/download/sfml/2.4.2/
 
 Los assets (mayormente las imágenes y algunos efectos de sonido) fueron tomados de los recursos provistos por el libro "Building JavaScript Games" del autor Arjan Egges, editorial Apress. Asimismo, la edición de las imágenes (para adaptarlas al proyecto) fue realizada por el alumno. 
 
-En cuanto al código en general, si bien se realizó un gran esfuerzo para que sea lo más auto-explicativo posible (nombres de miembros de clase, formatos, convención, responsabilidad única de métodos, etc), se agregaron comentarios, puntualmente para enfatizar las partes en donde se implementaron funciones matemáticas o físicas vistas a lo largo de la cursada (MRU, MRUV, Trigonometría, etc). Los mismos se pueden visualizar en cada uno de los archivos .h
+En cuanto al código en general, si bien se realizó un gran esfuerzo para que sea lo más auto-explicativo posible (nombres de miembros de clase, formatos, convención, responsabilidad única de métodos, etc), se agregaron comentarios, puntualmente para enfatizar las partes en donde se implementaron funciones matemáticas o físicas vistas a lo largo de la cursada (MRU, MRUV, Trigonometría, etc). Los mismos se pueden visualizar en cada uno de los archivos .h y para casos puntuales en los .cpp
 
 Por último, comentar que el desarrollo fue realizado bajo el paradigma de programación orientado a objetos, aunque se priorizó mantener la simplicidad en el árbol de clases, tanto a nivel de clases abstractas como utilización de interfaces, lo que derivó en un reducido pero cohesionado número de clases.
 
