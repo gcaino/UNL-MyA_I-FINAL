@@ -257,7 +257,10 @@ void Game::checkCollisions()
 void Game::updateScore()
 {
 	_score += SCORE_POINTS;
-	_accumulatedScoreToGainLife += SCORE_POINTS;
+
+	if (_lives < MAX_LIVES)
+		_accumulatedScoreToGainLife += SCORE_POINTS;
+	
 	updateScoreBar();
 }
 

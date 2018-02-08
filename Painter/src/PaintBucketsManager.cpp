@@ -7,7 +7,8 @@
 PaintBucketsManager::PaintBucketsManager(Game* game, int totalPaintBuckets)
 	: _game(game)
 	, _spawningTime(sf::seconds(0.f))
-	, _maxVelocity(BASE_VELOCITY)
+	, _minVelocity(BASE_MIN_VELOCITY)
+	, _maxVelocity(BASE_MAX_VELOCITY)
 	, _elapsedTimeChangeVelocity(sf::seconds(0.f))
 {
 	_paintBucketTextures[Utils::COLORS::BLUE].loadFromFile("assets/textures/spr_can_blue.png");
@@ -54,8 +55,8 @@ void PaintBucketsManager::setSpawningPositions()
 void PaintBucketsManager::update(sf::Time deltaTime)
 {
 	spawnPaintBucket(deltaTime);
-	incremetMaxVelocity(deltaTime);
-
+	increaseVelocityRange(deltaTime);
+	
 	for (size_t i = 0; i < _paintBuckets.size(); i++)
 	{
 		if (_paintBuckets[i]->isActive())
@@ -122,7 +123,7 @@ void PaintBucketsManager::setRandomColorToPaintBucket(PaintBucket& paintBucket)
 
 void PaintBucketsManager::setRandomVelocityToPaintBucket(PaintBucket& paintBucket)
 {
-	float randomVelocity = static_cast<float>(rand() % _maxVelocity + 10);
+	float randomVelocity = static_cast<float>(rand() % _maxVelocity + _minVelocity);
 	paintBucket.setVerticalVelocity(randomVelocity);
 }
 
@@ -147,11 +148,12 @@ void PaintBucketsManager::checkIfPaintBucketLeftWindow(sf::RenderWindow& window)
 	}
 }
 
-void PaintBucketsManager::incremetMaxVelocity(sf::Time deltaTime)
+void PaintBucketsManager::increaseVelocityRange(sf::Time deltaTime)
 {
 	_elapsedTimeChangeVelocity += deltaTime;
 	if (_elapsedTimeChangeVelocity >= CHANGE_VELOCITY_TIME)
 	{
+		_minVelocity += 10;
 		_maxVelocity += 10;
 		_elapsedTimeChangeVelocity -= CHANGE_VELOCITY_TIME;
 	}
@@ -162,15 +164,11 @@ void PaintBucketsManager::reset()
 	for (int i = 0; i < MAX_SPAWNING_POSITIONS; i++)
 		_spawningPositions[i].active = false;
 
-	for (size_t j = 0; j < _paintBuckets.size(); j++)
-	{
-		setRandomColorToPaintBucket(*_paintBuckets[j]);
-		setRandomSpawningPositionToPaintBucket(*_paintBuckets[j]);
-		_maxVelocity = BASE_VELOCITY;
-		setRandomVelocityToPaintBucket(*_paintBuckets[j]);
-		_paintBuckets[j]->setAcceleration(sf::Vector2f(0.f, 0.f));
-		_paintBuckets[j]->setActive(true);
-	}
+	_paintBuckets.clear();
+	createPaintBuckets(BASE_MIN_AMOUNT_PAINT_BUCKETS);
+
+	_minVelocity = BASE_MIN_VELOCITY;
+	_maxVelocity = BASE_MAX_VELOCITY;
 }
 
 void PaintBucketsManager::draw(sf::RenderWindow& window) const
