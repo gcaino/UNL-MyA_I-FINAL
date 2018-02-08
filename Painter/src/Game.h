@@ -1,12 +1,23 @@
 #ifndef GAME_H
 #define GAME_H
-
+// ----------------------------------------------------------------------------
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
-
+// ----------------------------------------------------------------------------
 class Cannon;
 class PaintBucketsManager;
-
+/**
+* La clase Game provee la estructura general al juego, a partir del loop principal
+* se realiza el llamado a los distintos métodos en función del estado o pantalla en
+* la cual se encuentra el flujo del juego (Menú, Gameplay, etc).
+* Es para destacar el control del 'Framerate', el cual hace posible que el juego 
+* corra a la misma velocidad en las distintas máquinas. En tal sentido, el gameplay 
+* es dependiente del tiempo transcurrido en cada frame (delta Time). Se multiplica 
+* el incremento de los movimientos por el tiempo transcurrido.
+* Por último, comentar el método 'checkCollision', el cual hace uso del método 'intersects'
+* provisto por SFML para realizar un sencillo chequeo de colisiones entre dos rectángulos.
+*/
+// ----------------------------------------------------------------------------
 class Game
 {
 public:
@@ -88,6 +99,6 @@ private:
 	sf::Sound			_gainLifeSound;
 	sf::Music			_music;
 };
-
+// ----------------------------------------------------------------------------
 #endif // !GAME_H
 

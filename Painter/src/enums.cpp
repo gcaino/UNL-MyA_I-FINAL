@@ -1,5 +1,5 @@
 #include "enums.h"
-
+// ----------------------------------------------------------------------------
 namespace Utils
 {
 	COLORS& operator++(COLORS& original)

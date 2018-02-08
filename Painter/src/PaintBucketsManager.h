@@ -1,14 +1,22 @@
 #ifndef PAINT_BUCKETS_MANAGER_H
 #define PAINT_BUCKETS_MANAGER_H
-
+// ----------------------------------------------------------------------------
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
 #include <vector>
 #include "PaintBucket.h"
 #include "enums.h"
-
+// ----------------------------------------------------------------------------
 class Game;
-
+/**
+* La clase PaintBucketsManager es la encargada de gestionar la totalidad de los 
+* baldes de pintura. Para tal objetivo se utilizó una estructura de datos del tipo
+* array dinámico.
+* Entre sus métodos principales se encuentran los encargados de 'spawnear' baldes,
+* setearles valores random en sus distintos atributos, controlar el estado, 
+* así como también ir gestionando el incremento de la dificultad (mayor velocidad).
+*/
+// ----------------------------------------------------------------------------
 class PaintBucketsManager
 {
 public:
@@ -41,7 +49,7 @@ private:
 	const int BASE_MAX_VELOCITY = 30;
 
 	Game*						_game;
-	std::vector<PaintBucket*>	_paintBuckets;
+	std::vector<PaintBucket*>	_paintBuckets; // Contenedor de punteros de Baldes de Pintura
 	sf::Time					_spawningTime;
 	sf::Texture					_paintBucketTextures[MAX_PAINT_BUCKETS_TEXTURES];
 	int							_maxVelocity;
@@ -60,6 +68,6 @@ private:
 	sf::SoundBuffer _collectPointsSoundBuffer;
 	sf::Sound		_collectPointsSound;
 };
-
+// ----------------------------------------------------------------------------
 #endif // PAINT_BUCKETS_MANAGER_H
 

@@ -1,14 +1,24 @@
 #ifndef CANNON_H
 #define CANNON_H
-
+// ----------------------------------------------------------------------------
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
 #include <vector>
 #include "enums.h"
-
+// ----------------------------------------------------------------------------
 class Ball;
 class Game;
-
+// ----------------------------------------------------------------------------
+/**
+* La clase Cannon representa al cañon que utiliza el jugador para lanzar las pelotas
+* de pintura. 
+* Es destacable el método 'lookAtMouse' en el cual se pusieron en práctica
+* los conocimientos, vistos a lo largo de la cursada, sobre trigonometría y uso
+* de vectores.
+* A su vez, comentar que la clase actúa como manejador de las pelotas, para lo cual
+* se utilizo una estructura de datos de tipo array dinámico.
+*/
+// ----------------------------------------------------------------------------
 class Cannon
 {
 public:
@@ -25,7 +35,7 @@ public:
 	void reset();
 
 private:
-	void lookAtMouse(sf::RenderWindow& window);
+	void lookAtMouse(sf::RenderWindow& window); // Utiliza funciones trigonométricas y vectores
 	void changeColorBall();
 	void shootBall();
 	void createColorBall();
@@ -53,7 +63,7 @@ private:
 	sf::Sound		_changeColorSound;
 
 	Game*			   _game;
-	std::vector<Ball*> _balls;
+	std::vector<Ball*> _balls; // Contenedor de punteros de pelotas
 	Ball*			   _currentColorBall;
 	sf::Vector2f	   _currentVelocity;
 	float			   _power;
@@ -61,6 +71,6 @@ private:
 	sf::Vector2f	   _position;
 
 };
-
+// ----------------------------------------------------------------------------
 #endif // CANNON_H
 

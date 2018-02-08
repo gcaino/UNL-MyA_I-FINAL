@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "PaintBucket.h"
 #include "enums.h"
-
+// ----------------------------------------------------------------------------
 PaintBucketsManager::PaintBucketsManager(Game* game, int totalPaintBuckets)
 	: _game(game)
 	, _spawningTime(sf::seconds(0.f))
@@ -67,6 +67,9 @@ void PaintBucketsManager::update(sf::Time deltaTime)
 	}	
 }
 
+// Pasado el timepo de spawneo se itera sobre el contenedor de baldes 
+// en busca de instancias inactivas. De encontrarse una se setean nuevamente
+// sus valores y se decrementa el contador de tiempo.
 void PaintBucketsManager::spawnPaintBucket(sf::Time deltaTime)
 {
 	_spawningTime += deltaTime;
@@ -87,6 +90,8 @@ void PaintBucketsManager::spawnPaintBucket(sf::Time deltaTime)
 	}
 }
 
+// Dicho método itera hasta encontrar una posición de spawneo no activa, para luego
+// setear dicha posición disponible al próximo balde de pintura.
 void PaintBucketsManager::setRandomSpawningPositionToPaintBucket(PaintBucket& paintBucket)
 {
 	Utils::COLORS randomIndex;
@@ -121,12 +126,19 @@ void PaintBucketsManager::setRandomColorToPaintBucket(PaintBucket& paintBucket)
 	}
 }
 
+// Se asigna una velocidad random, definida en un rango que va variando a lo largo del tiempo
+// de juego.
 void PaintBucketsManager::setRandomVelocityToPaintBucket(PaintBucket& paintBucket)
 {
 	float randomVelocity = static_cast<float>(rand() % _maxVelocity + _minVelocity);
 	paintBucket.setVerticalVelocity(randomVelocity);
 }
 
+// Cheque si el balde de pintura, al salir de la pantalla, contiene el mismo color de la 
+// la posición en donde fue spawneado. De ser así se suma puntaje, en caso contrario 
+// se pierde una vida. 
+// Finalmente, se ponen a disponibilidad tanto el balde como la posición de spawneo, permitiendo
+// reutilizar recursos ya instanciados en memoria, para el caso de los baldes de pintura.
 void PaintBucketsManager::checkIfPaintBucketLeftWindow(sf::RenderWindow& window)
 {
 	for (size_t i = 0; i < _paintBuckets.size(); i++)
@@ -148,6 +160,8 @@ void PaintBucketsManager::checkIfPaintBucketLeftWindow(sf::RenderWindow& window)
 	}
 }
 
+// Permite ir incrementando la dificultad del jueo a medida que se avanza en
+// el tiempo, a partir del incremento del rango de velocidad.
 void PaintBucketsManager::increaseVelocityRange(sf::Time deltaTime)
 {
 	_elapsedTimeChangeVelocity += deltaTime;

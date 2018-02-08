@@ -2,7 +2,7 @@
 #include "Ball.h"
 #include "Game.h"
 #include "enums.h"
-
+// ----------------------------------------------------------------------------
 Cannon::Cannon(Game* game)
 	: _game(game)
 	, _currentVelocity(0.f, 0.f)
@@ -73,6 +73,9 @@ void Cannon::shootBall()
 	_currentColorBall->getSprite().setScale(0.75f, 0.75f);
 	_currentColorBall->getSprite().setPosition(_position.x + 140.f, _position.y);
 
+	// Se instancia un tipo 'Transform' al cual se le aplica la rotación del cañon, junto con su posición,
+	// y luego se aplica dicha rotación al sprite de la pelota. De dicha manera se logra que las pelotas
+	// sean lanzadas por el cañon correctamente.
 	sf::Transform tmpTransform;
 	tmpTransform.rotate(_cannonSprite.getRotation(), _cannonSprite.getPosition());
 	sf::Vector2f point = tmpTransform.transformPoint(_currentColorBall->getSprite().getPosition());
@@ -81,6 +84,10 @@ void Cannon::shootBall()
 	_currentColorBall->setAcceleration(sf::Vector2f(0.f, 225.f));
 
 	const float PI = 3.14159265f;
+	// Para obtener un tiro oblicuo, aplicando lo visto en la teoría sobre cinemática, 
+	// se descompone la velocidad en sus componentes vectoriales, en el eje x y en el eje y.
+	// Para conocer el valor de la misma en cada eje, se recurre a las funciones trigonométricas
+	// aplicadas al ángulo de rotación del cañon.
 	_currentVelocity.x = _power * cos(_cannonSprite.getRotation() * PI / 180);
 	_currentVelocity.y = _power * sin(_cannonSprite.getRotation() * PI / 180);
 	_currentColorBall->setVelocity(_currentVelocity);
@@ -90,6 +97,8 @@ void Cannon::shootBall()
 	_shootPaintSound.play();
 }
 
+// Mientras el jugador mantiene presiona el botón izquierdo del mouse
+// se incrementa en 'x' unidades el poder de lanzamiento.
 void Cannon::accumulatePower()
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -132,6 +141,9 @@ void Cannon::createColorBall()
 	_balls.push_back(new Ball());
 }
 
+// En dicho método se utiliza una sobrecarga del operador de postincremento
+// del tipo definido 'COLORS', contenido en el espacio de nombre 'Utils'.
+// Ver archivo 'enums.h'
 void Cannon::changeColorBall()
 {
 	++_currentColor;
@@ -163,6 +175,9 @@ void Cannon::lookAtMouse(sf::RenderWindow& window)
 	float deltaX = mouseCurrentPosition.x - spriteCurrentPosition.x;
 	float deltaY = mouseCurrentPosition.y - spriteCurrentPosition.y;
 
+	// La función atan2 retorna sus valores expresados en radianes, por tal motivo
+	// como el método 'setRotation' de SFML recibe grados se debe realizar la
+	// conversión del Sistema Circular (radianes) al Sistema Sexagesimal (grados)
 	float rotation = (atan2(deltaY, deltaX)) * 180 / PI;
 
 	_cannonSprite.setRotation(rotation);

@@ -5,7 +5,7 @@
 #include "Ball.h"
 #include "PaintBucketsManager.h"
 #include "PaintBucket.h"
-
+// ----------------------------------------------------------------------------
 Game::Game()
 	: _window()
 	, _cannon()
@@ -117,7 +117,7 @@ void Game::loop()
 	{
 		processEvents();
 
-		deltaTime = clock.restart();
+		deltaTime = clock.restart(); // Setea el contador a 0 y retorna el tiempo transcurrido desde el seteo anterior.
 		if (!_paused)
 			update(deltaTime);
 		
@@ -228,6 +228,11 @@ void Game::updatePowerBar()
 	_powerText.setString("Power: " + std::to_string(static_cast<int>(_cannon->getPower())));
 }
 
+// Como menciona la teoría en la Unidad 08, la colisión se realiza a partir de un método sencillo
+// denominado 'bounding box', en el cual se verifica si dos figuras de colisión rectangulares se 
+// superponen. En nuestro caso, el sprite de la pelota de pintura VS el sprite de la lata que va cayendo.
+// En este sentido, haciendo uso del método 'intersects' de SFML, se va iterando sobre cada pelota y a su vez
+// se va recorriendo cada lata en busca de superposiciones.
 void Game::checkCollisions()
 {
 	if (_cannon->getBalls().empty())
